@@ -5,7 +5,7 @@ import { redirect } from "@sveltejs/kit";
 
 export const load: LayoutLoad = ({ url }) => {
 	const token = get(jwt);
-	const publicRoutes = ['/login'];
+	const publicRoutes = ['/login', '/register'];
 
 	if (!token && !publicRoutes.includes(url.pathname)) {
 		throw redirect(302, '/login');

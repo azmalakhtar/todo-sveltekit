@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto, replaceState } from "$app/navigation";
-	import { update } from "$lib/api";
+	import { update, deleteById } from "$lib/api";
 	import type { TodoRequest } from "$lib/todo.js";
 	import { onMount } from "svelte";
 
@@ -28,6 +28,14 @@
 			isImportant: isImportant,
 		};
 		await update(todo.id, todoRequest);
+		goto("/", { replaceState: true });
+	}
+
+	async function deleteTodo() {
+		console.log("dt");
+		console.log(todo);
+		await deleteById(todo.id);
+		console.log("dt-d");
 		goto("/", { replaceState: true });
 	}
 	onMount(() => {
@@ -58,23 +66,39 @@
 		id="title"
 		bind:value={todo.title}
 	></textarea>
-	<textarea
-		class="d-block w-100 border-0 mb-2 p-2"
-		name="description"
-		id="description"
-		bind:value={todo.description}
-	></textarea>
-	<input
-		class="border-0 d-block mb-2"
-		type="date"
-		bind:value={todo.dueDate}
-	/>
+	<div class="p-2">
+		<textarea
+			class="d-block w-100 border-0 mb-2 p-2 ms-1"
+			name="description"
+			id="description"
+			bind:value={todo.description}
+		></textarea>
+		<input
+			class="border-0 d-block mb-2"
+			type="date"
+			bind:value={todo.dueDate}
+		/>
 
-	<input type="checkbox" id="important" bind:checked={isImportant} />
-	<label for="important"> Important </label>
+		<div class="row ms-1 mb-2">
+			<div class="col-sm">
+				<input
+					type="checkbox"
+					id="important"
+					bind:checked={isImportant}
+				/>
+				<label for="important"> Important </label>
+			</div>
 
-	<input type="checkbox" id="urgent" bind:checked={isUrgent} />
-	<label for="urgent"> Urgent </label>
+			<div class="col-sm">
+				<input
+					type="checkbox"
+					id="urgent"
+					bind:checked={isUrgent}
+				/>
+				<label for="urgent"> Urgent </label>
+			</div>
+		</div>
+	</div>
 
 	<button
 		class={"btn btn-" + bgColor}
@@ -82,5 +106,13 @@
 		style="position: fixed; right: 24px; bottom: 24px;"
 	>
 		<i class="bi bi-check-lg"></i>
+	</button>
+
+	<button
+		class={"btn btn-" + bgColor}
+		onclick={deleteTodo}
+		style="position: fixed; left: 24px; bottom: 24px;"
+	>
+		<i class="bi bi-trash-fill"></i>
 	</button>
 </div>

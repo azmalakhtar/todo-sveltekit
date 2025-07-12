@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { replaceState } from "$app/navigation";
 	import { getOfDueDate } from "$lib/api";
 	import TodoItem from "$lib/components/TodoItem.svelte";
 	import type { Todo } from "$lib/todo";
+	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
 
 	let error: Error | null = $state(null);
@@ -13,7 +15,6 @@
 	let date: string = $state(new Date().toISOString().split("T")[0]);
 
 	async function getTodos() {
-		console.log(date);
 		getOfDueDate(date)
 			.then((todos) => {
 				const iut: Todo[] = [];
@@ -42,7 +43,7 @@
 	});
 </script>
 
-<div class="p-5">
+<div class="m-4">
 	<input
 		class="h1 border-0"
 		type="date"
@@ -90,7 +91,8 @@
 	<button
 		class="btn btn-secondary"
 		style="position: fixed; right: 24px; bottom: 24px;"
+		onclick={() => goto("/todo/add", { replaceState: false })}
 	>
-		<i class="bi bi-plus-circle" style="font-size: 2rem;"></i>
+		<i class="bi bi-plus-circle"></i>
 	</button>
 </div>
